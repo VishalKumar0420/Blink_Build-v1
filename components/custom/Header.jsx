@@ -80,7 +80,7 @@ const Header = () => {
                   </div>
                 )}
                 {userDetails?.picture&& (
-                  <div className="flex items-center gap-5 hover:bg-slate-600 p-5 rounded-lg">
+                  <div className="flex items-center gap-5 hover:bg-slate-600 p-1 rounded-lg">
                     {!open?<AlignJustify onClick={toggleSidebar} className="cursor-pointer"/>:
                     <X onClick={toggleSidebar} className="cursor-pointer"/>}
                   </div>
