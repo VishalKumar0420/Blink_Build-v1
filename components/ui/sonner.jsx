@@ -1,16 +1,16 @@
 "use client";
-import { useTheme } from "next-themes"
-import { Toaster as Sonner } from "sonner"
 
-const Toaster = ({
-  ...props
-}) => {
-  const { theme = "system" } = useTheme()
+import { useTheme } from "next-themes";
+import { Toaster as Sonner } from "sonner";
+
+const Toaster = ({ ...props }) => {
+  const { theme } = useTheme() || { theme: "system" };
 
   return (
-    (<Sonner
-      theme={theme}
+    <Sonner
+      theme={theme ?? "system"}
       className="toaster group"
+      position="top-center" // Move to top center
       toastOptions={{
         classNames: {
           toast:
@@ -21,9 +21,22 @@ const Toaster = ({
           cancelButton:
             "group-[.toast]:bg-muted group-[.toast]:text-muted-foreground",
         },
+        style: {
+          success: {
+            backgroundColor: "#4caf50",
+            color: "#fff",
+            border: "1px solid #388e3c",
+          },
+          error: {
+            backgroundColor: "#f44336",
+            color: "#fff",
+            border: "1px solid #d32f2f",
+          },
+        },
       }}
-      {...props} />)
+      {...props}
+    />
   );
-}
+};
 
-export { Toaster }
+export { Toaster };

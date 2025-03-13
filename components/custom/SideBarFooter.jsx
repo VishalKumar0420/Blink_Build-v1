@@ -5,34 +5,38 @@ import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
 import { useSidebar } from "../ui/sidebar";
 import { UserDetailsContext } from "@/context/UserDetailsContext";
+import { toast } from "sonner";
 
 const SideBarFooter = () => {
   const router = useRouter();
   const { toggleSidebar } = useSidebar();
-  const {userDetails,setUserDetails}=useContext(UserDetailsContext)
+  const { userDetails, setUserDetails } = useContext(UserDetailsContext);
 
   const handleLogout = () => {
-    //Remove the data from localstorage
+    // Remove the data from localStorage
     localStorage.removeItem("user");
     localStorage.removeItem("__paypal_storage__");
-    setUserDetails(null)
-    //  Redirect to login page
+    setUserDetails(null);
+    
+    // Redirect to login page
     router.push("/");
 
-    // 3. Close the sidebar
+    // Close the sidebar
     toggleSidebar();
   };
 
   const options = [
-    { name: "Settings", icon: Settings, path: "/workspace" },
-    { name: "Help Center", icon: LucideHelpCircle },
+    { name: "Settings", icon: Settings, comingSoon: true },
+    { name: "Help Center", icon: LucideHelpCircle, comingSoon: true },
     { name: "My Subscription", icon: Wallet2, path: "/pricing" },
-    { name: "Sign Out", icon: LogOut, action: handleLogout }, // Added action for logout
+    { name: "Sign Out", icon: LogOut, action: handleLogout },
   ];
 
   const onOptionClick = (option) => {
-    if (option.action) {
-      option.action(); // Call logout function if exists
+    if (option.comingSoon) {
+      toast.success("This feature is coming soon! 🚀"); // Replace with toast if needed
+    } else if (option.action) {
+      option.action();
     } else if (option.path) {
       router.push(option.path);
       toggleSidebar();

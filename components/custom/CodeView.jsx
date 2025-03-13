@@ -18,6 +18,7 @@ import { api } from "@/convex/_generated/api";
 import { Loader2Icon } from "lucide-react";
 import { UserDetailsContext } from "@/context/UserDetailsContext";
 import SandpackPreviewClient from "./SandpackPreviewClient";
+import { usePreview } from "@/context/PreviewContext";
 
 //Token calculation
 export const countToken = (inputText) => {
@@ -37,15 +38,18 @@ const CodeView = () => {
   const { id } = useParams();
   const convex = useConvex();
   const {action,setAction}=useState();
+  const { hasPreviewed, setHasPreviewed } = usePreview();
 
   useEffect(() => {
     id && getFiles();
   }, [id]);
 
-  // useEffect(()=>
-  // {
-  //   setActiveTab('preview')
-  // },[action])
+  const handleTabChange = (tab) => {
+    setActiveTab(tab);
+    if (tab === "preview") {
+      setHasPreviewed(true);  // Set preview status
+    }
+  };
 
   const getFiles = async () => {
     setLoading(true);
@@ -71,8 +75,9 @@ const CodeView = () => {
       setLoading(true);
       const PROMPT = JSON.stringify(messages) + " " + Prompt.CODE_GEN_PROMPT;
       const result = await axios.post("/api/gen-ai-code", { prompt: PROMPT });
-      console.log("Final Result", result.data);
+      // console.log("Final Result", result.data);
       const aiRes = result.data;
+      
       // Merge AI-generated files with existing ones
       const mergedFiles = { ...LookUp.DEFAULT_FILE, ...aiRes?.files };
       setFiles(mergedFiles);
@@ -97,22 +102,22 @@ const CodeView = () => {
     setLoading(false);
   };
 
+
   return (
     <div className="relative">
       <div className="w-full p-2 border">
         <div className="flex items-center justify-center flex-wrap shrink-0 bg-black p-1 w-[140px] gap-3 rounded-full">
-          <h2
-            className={`text-sm cursor-pointer ${activeTab == "code" && "text-blue-500 bg-blue-500 bg-opacity-25 p-1 px-2 rounded-full"}`}
-            onClick={() => setActiveTab("code")}
-          >
-            Code
-          </h2>
-          <h2
-            className={`text-sm cursor-pointer ${activeTab == "preview" && "text-blue-500 bg-blue-500 bg-opacity-25 p-1 px-2 rounded-full"}`}
-            onClick={() => setActiveTab("preview")}
-          >
-            Preview
-          </h2>
+        {["code", "preview"].map((tab) => (
+            <h2
+              key={tab}
+              className={`text-sm cursor-pointer ${
+                activeTab === tab && "text-blue-500 bg-blue-500 bg-opacity-25 p-1 px-2 rounded-full"
+              }`}
+              onClick={() => handleTabChange(tab)}
+            >
+              {tab.charAt(0).toUpperCase() + tab.slice(1)}
+            </h2>
+          ))}
         </div>
       </div>
       <SandpackProvider

@@ -14,6 +14,7 @@ import axios from "axios";
 import { useMutation } from "convex/react";
 import { v4 as uuidv4 } from "uuid";
 import { api } from "@/convex/_generated/api";
+import { toast } from "sonner";
 
 const SignInDialog = ({ openDialog, closeDialog }) => {
   const { setUserDetails } = useContext(UserDetailsContext);
@@ -51,12 +52,14 @@ const SignInDialog = ({ openDialog, closeDialog }) => {
           localStorage.setItem("user", JSON.stringify(newUser));
         }
 
-        setUserDetails(newUser); 
+        setUserDetails(newUser);
+        toast.success("Successfully signed in! 🎉");
         console.log("User data set successfully", newUser);
         closeDialog(false);
         
       } catch (error) {
         console.error("Login Error:", error);
+        toast.error("Authentication failed. Please try again.");
       }
     },
     onError: (errorResponse) => console.log("Login Error:", errorResponse),

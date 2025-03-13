@@ -2,8 +2,7 @@
 
 import LookUp from "@/data/LookUp";
 import React, { useContext, useState, useEffect } from "react";
-import { ArrowRight, Link2 } from "lucide-react"; // ✅ Removed incorrect Link import
-import Link from "next/link"; // ✅ Correct Next.js Link import
+import { ArrowRight, Link2 } from "lucide-react";
 import Colors from "@/data/Colors";
 import { MessagesContext } from "@/context/MessagesContext";
 import SignInDialog from "./SignInDialog";
@@ -109,8 +108,8 @@ const Hero = () => {
           />
         </div>
         <div>
-          <Toaster />
-          <Link2 onClick={() => toast("This Feature is Comming Soon🤞")} />
+          <Toaster richColors />
+          <Link2 onClick={() => toast.info("This Feature is Comming Soon🤞")} />
         </div>
       </div>
 

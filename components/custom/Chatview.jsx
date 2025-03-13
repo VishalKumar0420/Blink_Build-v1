@@ -11,7 +11,7 @@ import { ArrowRight, Link2, Loader2Icon } from "lucide-react";
 import Prompt from "@/data/Prompt";
 import axios from "axios";
 import ReactMarkdown from "react-markdown";
-import { MessagesContext } from "@/context/MessagesContext";
+import { MessagesContext } from "@/context/MessagesContext.jsx";
 import { useSidebar } from "../ui/sidebar";
 import { toast } from "sonner";
 
@@ -180,8 +180,7 @@ const Chatview = () => {
             />
           )}
         </div>
-        <div className="flex justify-between">
-          <Link2></Link2>
+        <div className="flex justify-end">
           <div>
             {userDetails && (
               <Image

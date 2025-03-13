@@ -62,15 +62,17 @@ export const updateFiles = mutation({
   },
 });
 
+
 export const getAllWorkspace = query({
-  args:{
-    userId:v.id('users'),
-  },
-  handler:async(ctx,args) => {
+  args: v.object({
+    userId: v.optional(v.id("users"))
+  }),
+  handler: async (ctx, args) => {
     const result = await ctx.db
-      .query('workspace')
-      .filter(q =>q.eq(q.field('userId'), args.userId))
+      .query("workspace")
+      .filter((q) => q.eq(q.field("userId"), args.userId))
       .collect();
     return result;
   },
 });
+

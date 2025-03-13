@@ -126,6 +126,7 @@ root.render(
     "uuid4": "^2.0.3",
     "firebase": "^11.1.0",
     "uuid": "^11.0.5",
+    // "gif.js": "^0.2.0"
   },
 
   PRICING_DESC:'Start with a free account to speed up your Workflow on public project or boost your entire team with instantly-opening production enviroments',

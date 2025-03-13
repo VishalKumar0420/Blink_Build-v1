@@ -13,6 +13,7 @@
   import { PayPalScriptProvider } from "@paypal/react-paypal-js";
   import { Actioncontext } from "@/context/ActionContext";
   import { useRouter } from "next/navigation";
+  import { PreviewProvider } from "@/context/PreviewContext";
   const convex = new ConvexReactClient(process.env.NEXT_PUBLIC_CONVEX_URL);
   const Provider = ({ children }) => {
     const [messages, setMessages] = useState([]);
@@ -30,12 +31,10 @@
 
         const storedUser = localStorage.getItem("user");
         if (!storedUser) {
-          console.warn("No user found in local storage");
-          route.push('/');
+          console.log("No user found in local storage");
           setLoading(false);
           return;
         }
-
 
         try {
 
@@ -55,12 +54,12 @@
           console.error("Failed to fetch user details:", error);
         }
         finally {
-          setLoading(false); // Ensure loading stops after authentication
+          setLoading(false);
         }
       };
 
       isAuthenticated();
-    }, [userDetails]);
+    }, [userDetails&&userDetails?._id]);
 
     if (!clientId) {
       console.error("Google Client ID is missing! Check .env.local");
@@ -86,11 +85,13 @@
                   disableTransitionOnChange
                 >
                   <SidebarProvider defaultOpen={false} className="flex flex-col relative">
+                  <PreviewProvider>
                   <Header/>
                     {children}
                     <div className="absolute">
                     <AppSidebar />
                     </div>
+                    </PreviewProvider>
                   </SidebarProvider>
                 </NextThemesProvider>
                 </Actioncontext.Provider>

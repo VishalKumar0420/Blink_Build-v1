@@ -15,8 +15,12 @@ const WorkspaceHistory = () => {
 
   useEffect(() => {
     userDetails && getAllWorkspace();
-  }, [userDetails?._id]);
+  }, [userDetails]);
 
+  const truncateText = (text, maxLength) => {
+    return text.length > maxLength ? text.slice(0, maxLength) + "..." : text;
+  };
+  
   const getAllWorkspace = async () => {
     const result = await convex.query(api.workspace.getAllWorkspace, {
       userId: userDetails?._id,
@@ -30,7 +34,7 @@ const WorkspaceHistory = () => {
         {workspaceList &&
           workspaceList?.map((workspace, index) => (
             <Link href={"/workspace/" + workspace?._id} key={index}>
-              <h2 onClick={toggleSidebar} className="text-sm p-1 text-gray-400 mt-2 font-light cursor-pointer rounded-md capitalize hover:text-white hover:bg-slate-600 transition duration-300" >
+              <h2 onClick={toggleSidebar} className="text-sm p-1 text-gray-400 mt-2 font-light cursor-pointer rounded-md capitalize truncate-text hover:text-white hover:bg-slate-600 transition duration-300" >
                 {workspace?.messages[0]?.content}
               </h2>
             </Link>

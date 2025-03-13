@@ -6,26 +6,33 @@ import { Button } from "../ui/button";
 import Colors from "@/data/Colors";
 
 import {
+  AlignJustify,
+  CrossIcon,
   EyeClosed,
-  HelpCircleIcon,
-  LogOut,
   LucideDownload,
-  Settings,
-  User,
-  Wallet,
+  X,
 } from "lucide-react";
 import { UserDetailsContext } from "@/context/UserDetailsContext";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { Actioncontext } from "@/context/ActionContext";
 import { useSidebar } from "../ui/sidebar";
+import SignInDialog from "./SignInDialog";
+import { usePreview } from "@/context/PreviewContext";
+import { toast } from "sonner";
 const Header = () => {
   const { userDetails } = useContext(UserDetailsContext);
   const pathname = usePathname();
   const { action, setAction } = useContext(Actioncontext);
-  const { toggleSidebar } = useSidebar();
+  const {open,toggleSidebar } = useSidebar();
+  const[openDialog,setOpenDialog]=useState(false)
+  const { hasPreviewed } = usePreview();
 
   const onActionbtn = (action) => {
+    if (action === "export" && !hasPreviewed) {
+      toast.warning("Please preview your project before exporting.");
+      return;
+    }
     setAction({
       actionType: action,
       timeStamp: Date.now(),
@@ -43,22 +50,25 @@ const Header = () => {
 
       <div>
         {!userDetails?.name ? (
-          <div className="flex gap-2">
-            <Button variant="ghost" className="bg-slate-500 hover:bg-slate-700">
+          <div>
+            {/* <Button variant="ghost" className="bg-slate-500 hover:bg-slate-700">
               Sign In
-            </Button>
+            </Button> */}
             <Button
               className="text-white font-bold"
               style={{ backgroundColor: Colors.BLUE }}
+              onClick={()=>setOpenDialog(true)}
             >
               Get Started
             </Button>
+            <SignInDialog openDialog={openDialog} closeDialog={setOpenDialog} />
           </div>
         ) : (
           <div>
             {(pathname?.includes("workspace") || pathname === "/") && (
               <div className="flex gap-2 items-center justify-center">
                 {pathname?.includes("workspace") && (
+                  <div>
                   <Button
                     variant="ghost"
                     className="bg-slate-600 hover:bg-slate-700"
@@ -67,16 +77,13 @@ const Header = () => {
                     <LucideDownload />
                     Export
                   </Button>
+                  </div>
                 )}
-                {userDetails?.picture && (
-                  <Image
-                    src={userDetails.picture}
-                    alt="User"
-                    width={30}
-                    height={30}
-                    className="rounded-full w-[30px] h-[30px] cursor-pointer"
-                    onClick={toggleSidebar}
-                  />
+                {userDetails?.picture&& (
+                  <div className="flex items-center gap-5 hover:bg-slate-600 p-2 rounded-lg">
+                    {!open?<AlignJustify onClick={toggleSidebar} className="cursor-pointer"/>:
+                    <X onClick={toggleSidebar} className="cursor-pointer"/>}
+                  </div>
                 )}
               </div>
             )}
