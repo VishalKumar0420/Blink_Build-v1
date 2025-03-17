@@ -5,41 +5,48 @@ import { useConvex } from "convex/react";
 import Link from "next/link";
 import React, { useContext, useEffect, useState } from "react";
 import { useSidebar } from "../ui/sidebar";
-import Colors from "@/data/Colors";
 
 const WorkspaceHistory = () => {
-  const { userDetails, setUserDetails } = useContext(UserDetailsContext);
-  const [workspaceList, setWorkspaceList] = useState();
+  const { userDetails } = useContext(UserDetailsContext);
+  const [workspaceList, setWorkspaceList] = useState([]);
   const { toggleSidebar } = useSidebar();
   const convex = useConvex();
+  const [activeIndex, setActiveIndex] = useState(null);
 
   useEffect(() => {
-    userDetails && getAllWorkspace();
+    if (userDetails) {
+      getAllWorkspace();
+    }
   }, [userDetails]);
 
-  const truncateText = (text, maxLength) => {
-    return text.length > maxLength ? text.slice(0, maxLength) + "..." : text;
-  };
-  
   const getAllWorkspace = async () => {
     const result = await convex.query(api.workspace.getAllWorkspace, {
       userId: userDetails?._id,
     });
     setWorkspaceList(result);
   };
+
   return (
-    <div className="flex justify-start flex-col px-2">
-      <h2 className="font-medium text-lg">Your Chats</h2>
-      <div className="flex flex-col p-1">
-        {workspaceList &&
-          workspaceList?.map((workspace, index) => (
-            <Link href={"/workspace/" + workspace?._id} key={index}>
-              <h2 onClick={toggleSidebar} className="text-sm p-1 text-gray-400 mt-2 font-light cursor-pointer rounded-md capitalize truncate-text hover:text-white hover:bg-slate-600 transition duration-300" >
-                {workspace?.messages[0]?.content}
-              </h2>
-            </Link>
-          ))}
-      </div>
+    <div className="flex flex-col mx-2">
+      {workspaceList &&
+        workspaceList.map((workspace, index) => (
+          <Link href={"/workspace/" + workspace?._id} key={index}>
+            <h2
+              onClick={() => {
+                toggleSidebar();
+                setActiveIndex(index);
+              }}
+              className={`text-md p-1 mt-2 font-light cursor-pointer rounded-md capitalize truncate-text transition duration-300
+                ${
+                  activeIndex === index
+                    ? "text-white bg-slate-600"
+                    : "text-gray-400 hover:text-white hover:bg-slate-800"
+                }`}
+            >
+              {workspace?.messages[0]?.content}
+            </h2>
+          </Link>
+        ))}
     </div>
   );
 };

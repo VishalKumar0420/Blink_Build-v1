@@ -1,3 +1,5 @@
+"use client"; // If using Next.js App Router (pages in 'app/' directory)
+
 import {
   Sidebar,
   SidebarContent,
@@ -10,34 +12,32 @@ import { Button } from "../ui/button";
 import { MessageCircleCode } from "lucide-react";
 import WorkspaceHistory from "./WorkspaceHistory";
 import SideBarFooter from "./SideBarFooter";
-import Colors from "@/data/Colors";
-import { useContext } from "react";
+import { useContext, useState, useEffect } from "react";
 import { UserDetailsContext } from "@/context/UserDetailsContext";
+import { usePathname } from "next/navigation";
 
 export function AppSidebar() {
-  const { userDetails, setUsersDetails } = useContext(UserDetailsContext);
+  const { userDetails } = useContext(UserDetailsContext);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   return (
     <Sidebar>
-      <SidebarHeader>
-      </SidebarHeader>
-      <SidebarContent style={{backgroundColor:"#101010"}}>
-        <div>
-      {userDetails?.picture && (
-          <div className="flex gap-5 justify-center items-center p-2 w-full" >
-            <Image
-              src={userDetails.picture}
-              alt="User"
-              width={50}
-              height={50}
-              className="rounded-full w-[40px] h-[40px] cursor-pointer"
-            />
-            <Button>
-              <MessageCircleCode />
-              Start New Chat
-            </Button>
-          </div>
-        )}
+      <SidebarHeader className="border-b-2">
+      <div>
+          {userDetails?.picture && (
+            <div className="flex  p-3 mt-[-4px] gap-8 items-center  w-full">
+              <Image
+                src={userDetails.picture}
+                alt="User"
+                width={50}
+                height={50}
+                className="rounded-full w-[35px] h-[35px] cursor-pointer"
+              />
+              <h2 className="text-xl">Your Chats</h2>
+            </div>
+          )}
         </div>
+      </SidebarHeader>
+      <SidebarContent>
         <SidebarGroup />
         <WorkspaceHistory />
         <SidebarGroup />

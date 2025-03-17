@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation";
 import React, { useContext } from "react";
 
 const Pricing = () => {
-  const router =useRouter()
+  const router=useRouter()
   const { userDetails, setUserDetails } = useContext(UserDetailsContext);
   return (
     <div
